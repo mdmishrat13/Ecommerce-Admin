@@ -2,7 +2,7 @@ import { ServerIcon } from "lucide-react"
 import { Alert, AlertTitle } from "./alert"
 import { Badge, BadgeProps } from "./badge"
 
-interface ApiAlertProps{
+interface ApiAlertProps {
   title:string,
   description:string,
   variant:'Public' | 'Admin'

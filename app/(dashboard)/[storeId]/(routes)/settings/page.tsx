@@ -29,7 +29,7 @@ const page:React.FC<SettingProps>= async({params}) => {
         <div className="flex-1 space-y-4 p-8 pt-4">
             <SettingForm initialData={store} />
         </div>
-        <ApiAlert/>
+        <ApiAlert title="test" description="testing this alert"variant="Public"/>
     </div>
   )
 }

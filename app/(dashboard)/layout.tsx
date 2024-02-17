@@ -16,9 +16,6 @@ const layout = async({children,params}:{
         where:{id:params.storeId,
         userId}
     })
-    if(!store){
-        return <h1>there is no store you may <CreateStoreButton/></h1>
-    }
   return (
     <>
     {children}
