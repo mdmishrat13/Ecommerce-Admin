@@ -77,7 +77,7 @@ const SettingForm:React.FC<SettingFormProps> = ({initialData}) => {
   return (
     <>
     <AlertModal isOpen={open} loading={loading} onClose={()=>{setOpen(false)}} onConfirm={onDelete}/>
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between py-4">
       <Heading title='Settings' description="Customize your Settings"/>
       <Button variant='destructive' size='icon' onClick={()=>{setOpen(true)}}>
         <Trash className="w-4 h-4"/>

@@ -25,11 +25,11 @@ const page:React.FC<SettingProps>= async({params}) => {
         redirect('/')
     }
   return (
-    <div className="flex-col">
-        <div className="flex-1 space-y-4 p-8 pt-4">
+    <div className="flex-col space-y-4 p-8 pt-4">
+        <div className="flex-1">
             <SettingForm initialData={store} />
         </div>
-        {/* <ApiAlert title="test" description="testing this alert"variant="Public"/> */}
+        <ApiAlert title="test" description="testing this alert"variant="Public"/>
     </div>
   )
 }
