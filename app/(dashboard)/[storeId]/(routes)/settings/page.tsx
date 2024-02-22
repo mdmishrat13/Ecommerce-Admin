@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 import React from "react"
 import SettingForm from "./(components)/SettingForm"
-import ApiAlert from "@/components/ui/api-alert"
 
 interface SettingProps {
     params:{storeId:string}
@@ -29,7 +28,6 @@ const page:React.FC<SettingProps>= async({params}) => {
         <div className="flex-1">
             <SettingForm initialData={store} />
         </div>
-        <ApiAlert title="test" description="testing this alert"variant="Public"/>
     </div>
   )
 }

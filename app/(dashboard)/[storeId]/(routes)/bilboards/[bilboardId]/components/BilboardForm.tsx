@@ -5,7 +5,7 @@ import * as z from 'zod'
 import { Button } from "@/components/ui/button"
 import Heading from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import { Store } from "@prisma/client"
+import { Billboard} from "@prisma/client"
 import { Trash } from "lucide-react"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,20 +19,27 @@ import AlertModal from '@/components/modals/alert-modal'
 import ApiAlert from '@/components/ui/api-alert'
 import useOrigin from '@/hooks/use-origin'
 
-interface SettingFormProps{
-  initialData:Store
+interface BilboardFormProps{
+  initialData:Billboard | null
 }
 
 const fromSchema = z.object({
-  name:z.string().min(1)
+  label: z.string().min(1),
+  imageUrl: z.string().min(1)
 })
 
-type SettingPropsValues = z.infer<typeof fromSchema>
-const SettingForm:React.FC<SettingFormProps> = ({initialData}) => {
+type BilboardPropsValues = z.infer<typeof fromSchema>
+const BilboardForm:React.FC<BilboardFormProps> = ({initialData}) => {
 
   const params = useParams()
   const router = useRouter()
   const origin = useOrigin()
+
+  const title = initialData?'Edit Title':'Create Title'
+  const description = initialData?'Edit Description':'Create Description'
+  const toastMessage = initialData ? 'Bilboard Updated' : 'Bilboard Created'
+  const action = initialData ? 'Save' : 'Create'
+  
 
   if(!params.storeId){
     redirect('/')
@@ -41,12 +48,15 @@ const SettingForm:React.FC<SettingFormProps> = ({initialData}) => {
   const [open,setOpen] = useState(false)
   const [loading,setLoading] = useState(false)
 
-  const form = useForm<SettingPropsValues>({
+  const form = useForm<BilboardPropsValues>({
     resolver:zodResolver(fromSchema),
-    defaultValues:initialData
+    defaultValues: initialData || {
+      label: '',
+      imageUrl:''
+    }
   })
 
-  const onSubmit = async(data:SettingPropsValues)=>{
+  const onSubmit = async(data:BilboardPropsValues)=>{
    try {
     setLoading(true)
 
@@ -81,20 +91,20 @@ const SettingForm:React.FC<SettingFormProps> = ({initialData}) => {
     <>
     <AlertModal isOpen={open} loading={loading} onClose={()=>{setOpen(false)}} onConfirm={onDelete}/>
     <div className="flex items-center justify-between py-4">
-      <Heading title='Settings' description="Customize your Settings"/>
-      <Button variant='destructive' size='icon' onClick={()=>{setOpen(true)}}>
+        <Heading title={title} description={description}/>
+      {initialData&&(<Button variant='destructive' size='icon' onClick={()=>{setOpen(true)}}>
         <Trash className="w-4 h-4"/>
-      </Button>
+      </Button>)}
     </div>
     <Separator className='my-4'/>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <div className="grid grid-cols-3 gap-8">
-            <FormField control={form.control} name='name' render={({field})=>(
+            <FormField control={form.control} name='label' render={({field})=>(
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder='Store Name'{...field}/>
+                  <Input disabled={loading} placeholder='Bilboard Name'{...field}/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
@@ -104,11 +114,8 @@ const SettingForm:React.FC<SettingFormProps> = ({initialData}) => {
         <Button disabled={loading} type='submit' className='ml-auto'>Save Changes</Button>
       </form>
     </Form>
-    <div className="py-8">
-    <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/api/${params.storeId}`}variant="Public"/>
-    </div>
     </>
   )
 }
 
-export default SettingForm
+export default BilboardForm

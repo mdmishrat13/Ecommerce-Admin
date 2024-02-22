@@ -60,7 +60,6 @@ export function StoreModal() {
                       <Input disabled={loading} placeholder='E-Commerce...'{...field}/>
                     </FormControl>
                       <FormMessage/>
-
                   </FormItem>
                 )} />
             <div className="pt-6 space-x-2 flex justify-end items-center">
