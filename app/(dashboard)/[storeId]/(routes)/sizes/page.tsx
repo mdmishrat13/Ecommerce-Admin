@@ -1,11 +1,11 @@
 import { Separator } from '@/components/ui/separator'
 import BillboardClient from './components/BillboardClient'
 import prismaDb from '@/lib/prismaDb'
-import { BilboardColumn } from './components/Column'
+import { SizeColumn } from './components/Column'
 import { format } from 'date-fns'
 
 const page = async ({params}:{params:{storeId:string}}) => {
-  const bilboards = await prismaDb.billboard.findMany({
+  const sizes = await prismaDb.size.findMany({
     where: {
       storeId:params.storeId
     },
@@ -14,16 +14,17 @@ const page = async ({params}:{params:{storeId:string}}) => {
     }
   })
 
-  const formattedBilboard: BilboardColumn[] = bilboards.map(item => ({
+  const formattedsize: SizeColumn[] = sizes.map(item => ({
     id:item.id,
-    label:item.label,
+    name: item.name,
+    value:item.value,
     createdAt: format(item.createdAt,'MMMM do, yyyy')
   }))
 
   return (
     <div className='flex-col'>
         <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardClient initialData={formattedBilboard} />
+        <BillboardClient initialData={formattedsize} />
           <Separator/>
           </div>
     </div>
