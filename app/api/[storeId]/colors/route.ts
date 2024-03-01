@@ -32,14 +32,14 @@ export const POST = async(req:Request,{params}:{params:{storeId:string}})=>{
             return new NextResponse("Unauthorised!",{status:403})
         }
 
-        const size = await prismaDb.size.create({
+        const color = await prismaDb.color.create({
             data:{
                 name,
                 value,
                 storeId:params.storeId
             }
         })
-        return NextResponse.json(size)
+        return NextResponse.json(color)
         
         
     } catch (error) {
@@ -51,12 +51,12 @@ export const POST = async(req:Request,{params}:{params:{storeId:string}})=>{
 
 export const GET = async(req:Request,{params}:{params:{storeId:string}})=>{
     try {
-        const sizes = await prismaDb.size.findMany({
+        const colors = await prismaDb.color.findMany({
             where: {
                 storeId:params.storeId
             }
         })
-        return NextResponse.json(sizes)
+        return NextResponse.json(colors)
         
     } catch (error) {
         console.log(error)

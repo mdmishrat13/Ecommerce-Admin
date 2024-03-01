@@ -10,12 +10,12 @@ export const POST = async(req:Request,{params}:{params:{storeId:string}})=>{
         }
 
         const body = await req.json()
-        const {name,value} = body
-        if(!name){
-            return new NextResponse('Name is required!',{status:500})
+        const {label,imageUrl} = body
+        if(!label){
+            return new NextResponse('Label is required!',{status:500})
         }
-        if(!value){
-            return new NextResponse('Value is required!',{status:500})
+        if(!imageUrl){
+            return new NextResponse('Image is required!',{status:500})
         }
         if(!params.storeId){
             return new NextResponse('Store not found!',{status:404})
@@ -32,14 +32,14 @@ export const POST = async(req:Request,{params}:{params:{storeId:string}})=>{
             return new NextResponse("Unauthorised!",{status:403})
         }
 
-        const size = await prismaDb.size.create({
+        const billboard = await prismaDb.billboard.create({
             data:{
-                name,
-                value,
+                label,
+                imageUrl,
                 storeId:params.storeId
             }
         })
-        return NextResponse.json(size)
+        return NextResponse.json(billboard)
         
         
     } catch (error) {
@@ -51,12 +51,12 @@ export const POST = async(req:Request,{params}:{params:{storeId:string}})=>{
 
 export const GET = async(req:Request,{params}:{params:{storeId:string}})=>{
     try {
-        const sizes = await prismaDb.size.findMany({
+        const billboards = await prismaDb.billboard.findMany({
             where: {
                 storeId:params.storeId
             }
         })
-        return NextResponse.json(sizes)
+        return NextResponse.json(billboards)
         
     } catch (error) {
         console.log(error)

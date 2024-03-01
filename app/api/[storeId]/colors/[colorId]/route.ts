@@ -4,17 +4,17 @@ import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
 export const GET = async(req:Request,
-    {params}:{params:{sizeId:string}})=>{
+    {params}:{params:{colorId:string}})=>{
     try {
-             if(!params.sizeId){
-                 return new NextResponse('Size Not Found',{status:404})
+             if(!params.colorId){
+                 return new NextResponse('Color Not Found',{status:404})
              }
-             const size = await prismaDb.size.findUnique({
+             const color = await prismaDb.color.findUnique({
                  where:{
-                     id:params.sizeId,
+                     id:params.colorId,
                  }
              })
-             return NextResponse.json(size)
+             return NextResponse.json(color)
              
          } catch (error) {
              console.log(error)
@@ -24,7 +24,7 @@ export const GET = async(req:Request,
      
 
 export const PATCH = async(req:Request,
-    {params}:{params:{sizeId:string,storeId:string}})=>{
+    {params}:{params:{colorId:string,storeId:string}})=>{
         try {
             const {userId} = auth()
             const body = await req.json()
@@ -44,8 +44,8 @@ export const PATCH = async(req:Request,
             }
 
 
-            if(!params.sizeId){
-                return new NextResponse('Size Not Found',{status:404})
+            if(!params.colorId){
+                return new NextResponse('Color Not Found',{status:404})
             }
 
             const storeByUserId = await prismaDb.store.findFirst({
@@ -59,9 +59,9 @@ export const PATCH = async(req:Request,
                 return new NextResponse("Unauthorised!",{status:403})
             }
 
-            const size = await prismaDb.size.updateMany({
+            const color = await prismaDb.color.updateMany({
                 where:{
-                    id:params.sizeId,
+                    id:params.colorId,
                 },
                 data:{
                     name,
@@ -70,7 +70,7 @@ export const PATCH = async(req:Request,
 
             })
 
-            return NextResponse.json(size)
+            return NextResponse.json(color)
             
         } catch (error) {
             console.log(error)
@@ -80,7 +80,7 @@ export const PATCH = async(req:Request,
 
 
     export const DELETE = async(req:Request,
-       {params}:{params:{storeId:string,sizeId:string}})=>{
+       {params}:{params:{storeId:string,colorId:string}})=>{
             try {
                 const {userId} = auth()
     
@@ -88,8 +88,8 @@ export const PATCH = async(req:Request,
                     return new NextResponse('Unauthenticated',{status:401})
                 }
     
-                if(!params.sizeId){
-                    return new NextResponse('Size Not Found',{status:404})
+                if(!params.colorId){
+                    return new NextResponse('Billboard Not Found',{status:404})
                 }
 
                 const storeByUserId = await prismaDb.store.findFirst({
@@ -103,12 +103,12 @@ export const PATCH = async(req:Request,
                     return new NextResponse("Unauthorised!",{status:403})
                 }
     
-                const size = await prismaDb.size.deleteMany({
+                const color = await prismaDb.color.deleteMany({
                     where:{
-                        id:params.sizeId,
+                        id:params.colorId,
                     }
                 })
-                return NextResponse.json(size)
+                return NextResponse.json(color)
                 
             } catch (error) {
                 console.log(error)

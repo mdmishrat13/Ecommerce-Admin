@@ -1,6 +1,6 @@
 import prismaDb from '@/lib/prismaDb'
 import React from 'react'
-import BilboardForm from './components/BilboardForm'
+import BilboardForm from './components/SizeForm'
 
 const page = async ({ params }: { params: { sizeId: string } }) => {
   const sizes = await prismaDb.size.findFirst({

@@ -4,17 +4,17 @@ import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
 export const GET = async(req:Request,
-    {params}:{params:{sizeId:string}})=>{
+    {params}:{params:{bilboardId:string}})=>{
     try {
-             if(!params.sizeId){
-                 return new NextResponse('Size Not Found',{status:404})
+             if(!params.bilboardId){
+                 return new NextResponse('Bilboard Not Found',{status:404})
              }
-             const size = await prismaDb.size.findUnique({
+             const billboard = await prismaDb.billboard.findUnique({
                  where:{
-                     id:params.sizeId,
+                     id:params.bilboardId,
                  }
              })
-             return NextResponse.json(size)
+             return NextResponse.json(billboard)
              
          } catch (error) {
              console.log(error)
@@ -24,28 +24,28 @@ export const GET = async(req:Request,
      
 
 export const PATCH = async(req:Request,
-    {params}:{params:{sizeId:string,storeId:string}})=>{
+    {params}:{params:{bilboardId:string,storeId:string}})=>{
         try {
             const {userId} = auth()
             const body = await req.json()
 
-            const {name,value} = body
+            const {label,imageUrl} = body
 
 
             if(!userId){
                 return new NextResponse('Unauthenticated',{status:401})
             }
 
-            if(!name){
-                return new NextResponse('Name is Required',{status:400})
+            if(!label){
+                return new NextResponse('Label is Required',{status:400})
             }
-            if(!value){
-                return new NextResponse('Value is Required',{status:400})
+            if(!imageUrl){
+                return new NextResponse('Image is Required',{status:400})
             }
 
 
-            if(!params.sizeId){
-                return new NextResponse('Size Not Found',{status:404})
+            if(!params.bilboardId){
+                return new NextResponse('Bilboard Not Found',{status:404})
             }
 
             const storeByUserId = await prismaDb.store.findFirst({
@@ -59,18 +59,18 @@ export const PATCH = async(req:Request,
                 return new NextResponse("Unauthorised!",{status:403})
             }
 
-            const size = await prismaDb.size.updateMany({
+            const billboard = await prismaDb.billboard.updateMany({
                 where:{
-                    id:params.sizeId,
+                    id:params.bilboardId,
                 },
                 data:{
-                    name,
-                    value
+                    label,
+                    imageUrl
                 }
 
             })
 
-            return NextResponse.json(size)
+            return NextResponse.json(billboard)
             
         } catch (error) {
             console.log(error)
@@ -80,7 +80,7 @@ export const PATCH = async(req:Request,
 
 
     export const DELETE = async(req:Request,
-       {params}:{params:{storeId:string,sizeId:string}})=>{
+       {params}:{params:{storeId:string,bilboardId:string}})=>{
             try {
                 const {userId} = auth()
     
@@ -88,8 +88,8 @@ export const PATCH = async(req:Request,
                     return new NextResponse('Unauthenticated',{status:401})
                 }
     
-                if(!params.sizeId){
-                    return new NextResponse('Size Not Found',{status:404})
+                if(!params.bilboardId){
+                    return new NextResponse('Billboard Not Found',{status:404})
                 }
 
                 const storeByUserId = await prismaDb.store.findFirst({
@@ -103,12 +103,12 @@ export const PATCH = async(req:Request,
                     return new NextResponse("Unauthorised!",{status:403})
                 }
     
-                const size = await prismaDb.size.deleteMany({
+                const billboard = await prismaDb.billboard.deleteMany({
                     where:{
-                        id:params.sizeId,
+                        id:params.bilboardId,
                     }
                 })
-                return NextResponse.json(size)
+                return NextResponse.json(billboard)
                 
             } catch (error) {
                 console.log(error)
