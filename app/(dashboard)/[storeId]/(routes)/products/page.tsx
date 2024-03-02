@@ -3,6 +3,7 @@ import ProductClient from './components/ProductClient'
 import prismaDb from '@/lib/prismaDb'
 import { ProductColumn } from './components/Column'
 import { format } from 'date-fns'
+import { formatter } from '@/lib/utils'
 
 const page = async ({params}:{params:{storeId:string}}) => {
   const products = await prismaDb.product.findMany({
@@ -21,7 +22,13 @@ const page = async ({params}:{params:{storeId:string}}) => {
 
   const formattedProduct: ProductColumn[] = products.map(item => ({
     id:item.id,
-    name:item.name,
+    name: item.name,
+    featured: item.featured,
+    archived: item.archived,
+    price: formatter.format(item.price.toNumber()),
+    category:item.category.name,
+    size: item.size.name,
+    color:item.color.name,
     createdAt: format(item.createdAt,'MMMM do, yyyy')
   }))
 

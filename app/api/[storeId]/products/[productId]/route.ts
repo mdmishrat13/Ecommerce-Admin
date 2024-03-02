@@ -4,17 +4,23 @@ import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
 export const GET = async(req:Request,
-    {params}:{params:{bilboardId:string}})=>{
+    {params}:{params:{productId:string}})=>{
     try {
-             if(!params.bilboardId){
-                 return new NextResponse('Bilboard Not Found',{status:404})
+             if(!params.productId){
+                 return new NextResponse('Product Not Found!',{status:404})
              }
-             const billboard = await prismaDb.billboard.findUnique({
+             const product = await prismaDb.product.findUnique({
                  where:{
-                     id:params.bilboardId,
+                     id:params.productId,
+                 },
+                 include: {
+                     images: true,
+                     size: true,
+                     color: true,
+                     category:true
                  }
              })
-             return NextResponse.json(billboard)
+             return NextResponse.json(product)
              
          } catch (error) {
              console.log(error)
@@ -24,28 +30,39 @@ export const GET = async(req:Request,
      
 
 export const PATCH = async(req:Request,
-    {params}:{params:{bilboardId:string,storeId:string}})=>{
+    {params}:{params:{productId:string,storeId:string}})=>{
         try {
             const {userId} = auth()
             const body = await req.json()
 
-            const {label,imageUrl} = body
+            const { name, price,categoryId,sizeId,colorId,archived,featured,images } = body
 
 
             if(!userId){
                 return new NextResponse('Unauthenticated',{status:401})
             }
 
-            if(!label){
-                return new NextResponse('Label is Required',{status:400})
+            if(!name){
+                return new NextResponse('Name is required!',{status:500})
             }
-            if(!imageUrl){
-                return new NextResponse('Image is Required',{status:400})
+            if(!price){
+                return new NextResponse('Price is required!',{status:500})
+            }
+            if(!categoryId){
+                return new NextResponse('Category is required!',{status:500})
+            }
+            if(!sizeId){
+                return new NextResponse('Size is required!',{status:500})
+            }
+            if(!colorId){
+                return new NextResponse('Color is required!',{status:500})
+            }
+            if(!images||!images.length){
+                return new NextResponse('Image is required!',{status:404})
             }
 
-
-            if(!params.bilboardId){
-                return new NextResponse('Bilboard Not Found',{status:404})
+            if(!params.productId){
+                return new NextResponse('Product Not Found',{status:404})
             }
 
             const storeByUserId = await prismaDb.store.findFirst({
@@ -59,18 +76,39 @@ export const PATCH = async(req:Request,
                 return new NextResponse("Unauthorised!",{status:403})
             }
 
-            const billboard = await prismaDb.billboard.updateMany({
+            await prismaDb.product.update({
                 where:{
-                    id:params.bilboardId,
+                    id:params.productId,
                 },
                 data:{
-                    label,
-                    imageUrl
+                    name,
+                    price,
+                    colorId,
+                    sizeId,
+                    categoryId,
+                    archived,
+                    featured,
+                    images: {
+                        deleteMany:{}
+                    },
+                    storeId: params.storeId,
                 }
 
             })
+            const product = await prismaDb.product.update({
+                where: {
+                    id:params.productId
+                },
+                data: {
+                    images: {
+                        createMany: {
+                            data:[...images.map((image:{url:string})=>image)]
+                        }
+                    }
+                }
+            })
 
-            return NextResponse.json(billboard)
+            return NextResponse.json(product)
             
         } catch (error) {
             console.log(error)
@@ -80,7 +118,7 @@ export const PATCH = async(req:Request,
 
 
     export const DELETE = async(req:Request,
-       {params}:{params:{storeId:string,bilboardId:string}})=>{
+       {params}:{params:{storeId:string,productId:string}})=>{
             try {
                 const {userId} = auth()
     
@@ -88,8 +126,8 @@ export const PATCH = async(req:Request,
                     return new NextResponse('Unauthenticated',{status:401})
                 }
     
-                if(!params.bilboardId){
-                    return new NextResponse('Billboard Not Found',{status:404})
+                if(!params.productId){
+                    return new NextResponse('Product Not Found',{status:404})
                 }
 
                 const storeByUserId = await prismaDb.store.findFirst({
@@ -103,12 +141,12 @@ export const PATCH = async(req:Request,
                     return new NextResponse("Unauthorised!",{status:403})
                 }
     
-                const billboard = await prismaDb.billboard.deleteMany({
+                const product = await prismaDb.product.deleteMany({
                     where:{
-                        id:params.bilboardId,
+                        id:params.productId,
                     }
                 })
-                return NextResponse.json(billboard)
+                return NextResponse.json(product)
                 
             } catch (error) {
                 console.log(error)

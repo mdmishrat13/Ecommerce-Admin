@@ -12,22 +12,22 @@ interface ProductClientProps{
   initialData:ProductColumn[]
 }
 
-const BillboardClient:React.FC<ProductClientProps> = ({initialData}) => {
+const BillboardClient: React.FC<ProductClientProps> = ({ initialData }) => {
     const router = useRouter()
     const params = useParams()
   return (
     <>
       <div className='flex items-center justify-between'>
-          <Heading title={`Billboards(${initialData?.length})`} description='Manage your bilboards' />
-          <Button onClick={()=>{router.push(`/${params.storeId}/bilboards/new`)}}>
+          <Heading title={`Products(${initialData?.length})`} description='Manage your Products' />
+          <Button onClick={()=>{router.push(`/${params.storeId}/products/new`)}}>
           <Plus className='mr-2 h-4 w-4'/> Add New
       </Button>
       </div>
       <Separator />
-      <DataTable columns={columns} data={initialData} searchKey={'label'} />
-      <Heading title='API' description='Api calls for billboards'/>
+      <DataTable columns={columns} data={initialData} searchKey={'name'} />
+      <Heading title='API' description='Api calls for products'/>
       <Separator />
-      <ApiList entityIdName='bilboardId' entityName='bilboards'/>
+      <ApiList entityIdName='productId' entityName='products'/>
       </>
   )
 }
