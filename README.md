@@ -1,7 +1,7 @@
-## Project Name: Ecommerce Admin Dashboard
+# Project Name: Ecommerce Admin Dashboard
 
 
-# Description:
+## Description:
 
 This is a full-featured e-commerce application built with Next.js, providing a seamless and efficient online shopping experience. It leverages the power of TypeScript for enhanced type safety, alongside Prisma for robust interaction with your SQL database. Tailwind CSS empowers you with utility-first styling, while Shadcn UI offers pre-built components to accelerate development.
 
@@ -15,7 +15,7 @@ This is a full-featured e-commerce application built with Next.js, providing a s
 - [License](#license)
 
 
-# Tech Stack:
+## Tech Stack:
 
 - **Next.js:** Utilizing the power of React with server-side rendering for a seamless user experience.
 - **Prisma:** Database ORM for easy and type-safe database interactions.
@@ -64,3 +64,6 @@ The project structure is organized to maintain a clean and scalable codebase. He
 * hooks/: Reusable React hooks.
 * prisma/: Global styles and Tailwind CSS configuration.
 * providers/: Utility functions and helper modules.
+
+## Live link
+[Ecommerce-Admin-Dashboard](https://ecommerce-admin-seven-rho.vercel.app/)
